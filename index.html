@@ -1,180 +1,159 @@
-<!DOCTYPE html>
-<html lang="nl">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Raad de Leeftijd — Schilderijen</title>
-  <link rel="stylesheet" href="style.css" />
-</head>
-<body>
+<!DOCTYPE html> 
+<html lang="nl"> 
+<head> 
+  <meta charset="UTF-8" /> 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" /> 
+  <title>Raad de Leeftijd — Schilderijen</title> 
+  <link rel="stylesheet" href="style.css" /> 
+</head> 
+<body> 
 
-  
-  <!-- ═══════════════════════════════════════════════
-       HEADER (altijd zichtbaar)
-  ════════════════════════════════════════════════ -->
-  <header id="site-header" class="hidden">
-    <div class="header-inner">
-      <span class="header-logo">Raad de Leeftijd</span>
-      <div class="header-right">
-        <span id="header-score">Score: 0</span>
-        <button id="btn-reset" class="btn-ghost" title="Opnieuw beginnen">↺ Reset</button>
-      </div>
-    </div>
-  </header>
+  <header id="site-header" class="hidden"> 
+    <div class="header-inner"> 
+      <span class="header-logo">Raad de Leeftijd</span> 
+      <div class="header-right"> 
+        <span id="header-score">Score: 0</span> 
+        <button id="btn-reset" class="btn-ghost" title="Opnieuw beginnen">↺ Reset</button> 
+      </div> 
+    </div> 
+  </header> 
 
-  <!-- ═══════════════════════════════════════════════
-       SCHERM 1 — INTRO
-  ════════════════════════════════════════════════ -->
-  <section id="screen-intro" class="screen active">
-    <div class="intro-card">
-      <h1 class="intro-title">Raad de Leeftijd</h1>
-      <p class="intro-subtitle">Hoe goed ken je de gezichten uit de Gouden Eeuw?</p>
-      <p class="intro-body">
-        Je krijgt een reeks historische portretten te zien. Probeer voor elk portret in te schatten
-        <strong>hoe oud de afgebeelde persoon lijkt</strong>, en optioneel in welke historische
-        periode het werk is gemaakt. Na elk antwoord krijg je uitleg over wat je ziet.
-      </p>
-      <button id="btn-start" class="btn-primary">Begin het spel</button>
-      <p class="intro-hint">{{ CONFIG.DATA.length }} portretten</p>
-    </div>
-  </section>
+  <section id="screen-intro" class="screen active"> 
+    <div class="intro-card"> 
+      <h1 class="intro-title">Raad de Leeftijd</h1> 
+      <p class="intro-subtitle">Hoe goed ken je de gezichten uit de Gouden Eeuw?</p> 
+      <p class="intro-body"> 
+        Je krijgt een reeks historische portretten te zien. Probeer voor elk portret in te schatten 
+        <strong>hoe oud de afgebeelde persoon lijkt</strong>, en optioneel in welke historische 
+        periode het werk is gemaakt. Na elk antwoord krijg je uitleg over wat je ziet. 
+      </p> 
+      <button id="btn-start" class="btn-primary">Begin het spel</button> 
+      <p class="intro-hint">{{ CONFIG.DATA.length }} portretten</p> 
+    </div> 
+  </section> 
 
-  <!-- ═══════════════════════════════════════════════
-       SCHERM 2 — VRAAG
-  ════════════════════════════════════════════════ -->
-  <section id="screen-question" class="screen">
+  <section id="screen-question" class="screen"> 
 
-    <div class="progress-bar-wrap">
-      <div class="progress-bar-inner" id="progress-bar"></div>
-    </div>
-    <div class="progress-label" id="progress-label">Vraag 1 / 6</div>
+    <div class="progress-bar-wrap"> 
+      <div class="progress-bar-inner" id="progress-bar"></div> 
+    </div> 
+    <div class="progress-label" id="progress-label">Vraag 1 / 6</div> 
 
-    <div class="question-layout">
+    <div class="question-layout"> 
 
-      <!-- Linker kolom: afbeelding -->
-      <div class="painting-panel">
-        <div class="painting-frame">
-          <img id="painting-img" src="" alt="" />
-          <div id="painting-fallback" class="painting-fallback hidden">
-            Afbeelding kon niet worden geladen
-          </div>
-        </div>
-        <div class="painting-meta" id="painting-meta"></div>
-      </div>
+      <div class="painting-panel"> 
+        <div class="painting-frame"> 
+          <img id="painting-img" src="" alt="" /> 
+          <div id="painting-fallback" class="painting-fallback hidden"> 
+            Afbeelding kon niet worden geladen 
+          </div> 
+        </div> 
+        <div class="painting-meta" id="painting-meta"></div> 
+      </div> 
 
-      <!-- Rechter kolom: vragen -->
-      <div class="questions-panel">
+      <div class="questions-panel"> 
 
-        <h2 class="question-heading">Hoe oud lijkt deze persoon?</h2>
-        <div class="radio-group" id="age-options" role="group" aria-label="Leeftijdscategorie"></div>
+        <h2 class="question-heading">Hoe oud lijkt deze persoon?</h2> 
+        <div class="radio-group" id="age-options" role="group" aria-label="Leeftijdscategorie"></div> 
 
-        <div id="period-section">
-          <h2 class="question-heading">Uit welke periode stamt dit werk?</h2>
-          <div class="radio-group" id="period-options" role="group" aria-label="Periode">
-            <label class="radio-card">
-              <input type="radio" name="period" value="before" />
-              <span class="radio-label">Vóór de Gouden Eeuw</span>
-            </label>
-            <label class="radio-card">
-              <input type="radio" name="period" value="golden" />
-              <span class="radio-label">Gouden Eeuw</span>
-            </label>
-            <label class="radio-card">
-              <input type="radio" name="period" value="after" />
-              <span class="radio-label">Na de Gouden Eeuw</span>
-            </label>
-          </div>
-        </div>
+        <div id="period-section"> 
+          <h2 class="question-heading">Uit welke periode stamt dit werk?</h2> 
+          <div class="radio-group" id="period-options" role="group" aria-label="Periode"> 
+            <label class="radio-card"> 
+              <input type="radio" name="period" value="before" /> 
+              <span class="radio-label">Vóór de Gouden Eeuw</span> 
+            </label> 
+            <label class="radio-card"> 
+              <input type="radio" name="period" value="golden" /> 
+              <span class="radio-label">Gouden Eeuw</span> 
+            </label> 
+            <label class="radio-card"> 
+              <input type="radio" name="period" value="after" /> 
+              <span class="radio-label">Na de Gouden Eeuw</span> 
+            </label> 
+          </div> 
+        </div> 
 
-        <button id="btn-confirm" class="btn-primary" disabled>Bevestig antwoord</button>
-      </div>
-    </div>
-  </section>
+        <button id="btn-confirm" class="btn-primary" disabled>Bevestig antwoord</button> 
+      </div> 
+    </div> 
+  </section> 
 
-  <!-- ═══════════════════════════════════════════════
-       SCHERM 3 — FEEDBACK
-  ════════════════════════════════════════════════ -->
-  <section id="screen-feedback" class="screen">
-    <div class="feedback-layout">
+  <section id="screen-feedback" class="screen"> 
+    <div class="feedback-layout"> 
 
-      <!-- Afbeelding -->
-      <div class="painting-panel">
-        <div class="painting-frame">
-          <img id="feedback-img" src="" alt="" />
-        </div>
-        <div class="painting-meta" id="feedback-meta"></div>
-      </div>
+      <div class="painting-panel"> 
+        <div class="painting-frame"> 
+          <img id="feedback-img" src="" alt="" /> 
+        </div> 
+        <div class="painting-meta" id="feedback-meta"></div> 
+      </div> 
 
-      <!-- Feedback tekst -->
-      <div class="feedback-panel">
+      <div class="feedback-panel"> 
 
-        <div class="verdict-row" id="verdict-age"></div>
-        <div class="verdict-row" id="verdict-period"></div>
+        <div class="verdict-row" id="verdict-age"></div> 
+        <div class="verdict-row" id="verdict-period"></div> 
 
-        <div class="feedback-ages">
-          <div class="age-block">
-            <span class="age-label">Jouw keuze</span>
-            <span class="age-value" id="fb-chosen-age"></span>
-          </div>
-          <div class="age-arrow">→</div>
-          <div class="age-block">
-            <span class="age-label">Werkelijke leeftijd</span>
-            <span class="age-value" id="fb-actual-age"></span>
-          </div>
-          <div class="age-block">
-            <span class="age-label">Lijkt-leeftijd</span>
-            <span class="age-value" id="fb-apparent-age"></span>
-          </div>
-        </div>
+        <div class="feedback-ages"> 
+          <div class="age-block"> 
+            <span class="age-label">Jouw keuze</span> 
+            <span class="age-value" id="fb-chosen-age"></span> 
+          </div> 
+          <div class="age-arrow">→</div> 
+          <div class="age-block"> 
+            <span class="age-label">Werkelijke leeftijd</span> 
+            <span class="age-value" id="fb-actual-age"></span> 
+          </div> 
+          <div class="age-block"> 
+            <span class="age-label">Lijkt-leeftijd</span> 
+            <span class="age-value" id="fb-apparent-age"></span> 
+          </div> 
+        </div> 
 
-        <div class="score-delta" id="score-delta"></div>
+        <div class="score-delta" id="score-delta"></div> 
 
-        <p class="feedback-explanation" id="fb-explanation"></p>
+        <p class="feedback-explanation" id="fb-explanation"></p> 
 
-        <div class="analysis-grid">
-          <div class="analysis-card">
-            <strong>Uiterlijk</strong>
-            <p id="fb-uiterlijk"></p>
-          </div>
-          <div class="analysis-card">
-            <strong>Houding &amp; expressie</strong>
-            <p id="fb-houding"></p>
-          </div>
-          <div class="analysis-card">
-            <strong>Activiteit</strong>
-            <p id="fb-activiteit"></p>
-          </div>
-          <div class="analysis-card">
-            <strong>Context</strong>
-            <p id="fb-context"></p>
-          </div>
-        </div>
+        <div class="analysis-grid"> 
+          <div class="analysis-card"> 
+            <strong>Uiterlijk</strong> 
+            <p id="fb-uiterlijk"></p> 
+          </div> 
+          <div class="analysis-card"> 
+            <strong>Houding &amp; expressie</strong> 
+            <p id="fb-houding"></p> 
+          </div> 
+          <div class="analysis-card"> 
+            <strong>Activiteit</strong> 
+            <p id="fb-activiteit"></p> 
+          </div> 
+          <div class="analysis-card"> 
+            <strong>Context</strong> 
+            <p id="fb-context"></p> 
+          </div> 
+        </div> 
 
-        <button id="btn-next" class="btn-primary">Volgende portret →</button>
-      </div>
-    </div>
-  </section>
+        <button id="btn-next" class="btn-primary">Volgende portret →</button> 
+      </div> 
+    </div> 
+  </section> 
 
-  <!-- ═══════════════════════════════════════════════
-       SCHERM 4 — EINDE
-  ════════════════════════════════════════════════ -->
-  <section id="screen-end" class="screen">
-    <div class="end-card">
-      <h2 class="end-title">Spel afgerond</h2>
-      <div class="end-score-wrap">
-        <span class="end-score-number" id="end-score">0</span>
-        <span class="end-score-label">punten</span>
-      </div>
-      <div class="end-stats" id="end-stats"></div>
-      <p class="end-conclusion" id="end-conclusion"></p>
-      <div class="end-buttons">
-        <button id="btn-replay" class="btn-primary">Opnieuw spelen</button>
-        <button id="btn-home" class="btn-secondary">Terug naar intro</button>
-      </div>
-    </div>
-  </section>
+  <section id="screen-end" class="screen"> 
+    <div class="end-card"> 
+      <h2 class="end-title">Spel afgerond</h2> 
+      <div class="end-score-wrap"> 
+        <span class="end-score-number" id="end-score">0</span> 
+        <span class="end-score-label">punten</span> 
+      </div> 
+      <div class="end-stats" id="end-stats"></div> 
+      <p class="end-conclusion" id="end-conclusion"></p> 
+      <div class="end-buttons"> 
+        <button id="btn-replay" class="btn-primary">Opnieuw spelen</button> 
+        <button id="btn-home" class="btn-secondary">Terug naar intro</button> 
+      </div> 
+    </div> 
+  </section> 
 
-  <script src="script.js"></script>
-</body>
-
-</html>
+  <script src="script.js"></script> 
+</body> 
+</html> 
