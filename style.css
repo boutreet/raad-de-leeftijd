@@ -1,8 +1,3 @@
-/* ══════════════════════════════════════════════
-   RAAD DE LEEFTIJD — Stylesheet
-   Stijl: schoon, helder, neutraal
-══════════════════════════════════════════════ */
-
 :root {
   --bg:         #f4f4f4;
   --white:      #ffffff;
@@ -22,7 +17,6 @@ img  { display: block; max-width: 100%; }
 button { cursor: pointer; font-family: inherit; font-size: 1rem; }
 .hidden { display: none !important; }
 
-/* ── Header ─────────────────────────────── */
 #site-header {
   background: var(--white);
   border-bottom: 1px solid var(--border);
@@ -52,13 +46,11 @@ button { cursor: pointer; font-family: inherit; font-size: 1rem; }
 }
 .btn-ghost:hover { background: var(--bg); border-color: #aaa; color: var(--text); }
 
-/* ── Schermen ────────────────────────────── */
 .screen { display: none; min-height: calc(100vh - 49px); padding: 2rem 1.25rem; }
 .screen.active { display: block; }
 #screen-intro.active,
 #screen-end.active { display: flex; }
 
-/* ── Knoppen ─────────────────────────────── */
 .btn-primary {
   background: var(--accent);
   color: #fff;
@@ -82,9 +74,6 @@ button { cursor: pointer; font-family: inherit; font-size: 1rem; }
 }
 .btn-secondary:hover { background: var(--bg); }
 
-/* ══════════════════════════════════════════
-   INTRO
-══════════════════════════════════════════ */
 #screen-intro { display: flex; align-items: center; justify-content: center; }
 .intro-card {
   max-width: 500px;
@@ -102,9 +91,6 @@ button { cursor: pointer; font-family: inherit; font-size: 1rem; }
 .intro-ornament { display: none; }
 .intro-divider  { display: none; }
 
-/* ══════════════════════════════════════════
-   VOORTGANG
-══════════════════════════════════════════ */
 .progress-bar-wrap {
   max-width: 1080px;
   margin: 0 auto .4rem;
@@ -127,9 +113,6 @@ button { cursor: pointer; font-family: inherit; font-size: 1rem; }
   margin-bottom: 1.5rem;
 }
 
-/* ══════════════════════════════════════════
-   VRAAG + FEEDBACK LAYOUT
-══════════════════════════════════════════ */
 .question-layout,
 .feedback-layout {
   display: grid;
@@ -140,7 +123,6 @@ button { cursor: pointer; font-family: inherit; font-size: 1rem; }
   align-items: start;
 }
 
-/* Schilderij */
 .painting-panel { position: sticky; top: 60px; }
 .painting-frame {
   background: #222;
@@ -175,7 +157,6 @@ button { cursor: pointer; font-family: inherit; font-size: 1rem; }
   text-align: center;
 }
 
-/* Panelen */
 .questions-panel,
 .feedback-panel {
   background: var(--white);
@@ -191,7 +172,6 @@ button { cursor: pointer; font-family: inherit; font-size: 1rem; }
   border-bottom: 1px solid var(--border);
 }
 
-/* Radio-opties */
 .radio-group { display: flex; flex-direction: column; gap: .4rem; margin-bottom: 1.25rem; }
 .radio-card {
   display: flex;
@@ -210,9 +190,6 @@ button { cursor: pointer; font-family: inherit; font-size: 1rem; }
 
 #period-section { margin-top: .75rem; }
 
-/* ══════════════════════════════════════════
-   FEEDBACK
-══════════════════════════════════════════ */
 .verdict-row {
   font-size: .85rem;
   font-weight: 600;
@@ -288,9 +265,6 @@ button { cursor: pointer; font-family: inherit; font-size: 1rem; }
 .analysis-card p { color: var(--text); }
 .analysis-icon { display: none; }
 
-/* ══════════════════════════════════════════
-   EINDSCHERM
-══════════════════════════════════════════ */
 #screen-end { display: flex; align-items: center; justify-content: center; }
 .end-card {
   max-width: 460px;
@@ -324,9 +298,6 @@ button { cursor: pointer; font-family: inherit; font-size: 1rem; }
 }
 .end-buttons { display: flex; justify-content: center; gap: .75rem; flex-wrap: wrap; }
 
-/* ══════════════════════════════════════════
-   RESPONSIEF
-══════════════════════════════════════════ */
 @media (max-width: 720px) {
   .question-layout,
   .feedback-layout  { grid-template-columns: 1fr; }
