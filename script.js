@@ -1,45 +1,13 @@
-/**
- * ═══════════════════════════════════════════════════════════════
- *  RAAD DE LEEFTIJD — script.js
- *  Gebruik het IIFE-patroon zodat er geen globals lekken.
- * ═══════════════════════════════════════════════════════════════
- */
 (function () {
   'use strict';
 
-  /* ══════════════════════════════════════════════════════════════
-     ██████  CONFIG — pas hier de spelregels aan
-  ══════════════════════════════════════════════════════════════ */
   const CONFIG = {
-    /** Zet op false om vraag 2 (periode) volledig te verbergen */
     enablePeriodQuestion: true,
-
-    /**
-     * Leeftijdscategorieën — de labels die de speler te zien krijgt.
-     * Zorg dat 'apparentAgeBucket' in DATA exact overeenkomt met
-     * één van deze strings.
-     */
     ageBuckets: ['10-12', '13-15', '16-18', '18-25', '25-35', '35-50', '50+'],
-
-    /** Shuffle de volgorde van portretten bij elke spelstart */
     shuffleQuestions: true,
-
-    /** Punten voor een correct leeftijdsantwoord */
     pointsCorrectAge: 10,
-
-    /** Punten voor een correct periode-antwoord */
     pointsCorrectPeriod: 5,
-
-    /**
-     * Punten bij een fout antwoord (zet op -2 voor strafpunten,
-     * 0 voor geen aftrek)
-     */
     pointsWrong: 0,
-
-    /**
-     * Eindconclusie-teksten op basis van scorepercentage.
-     * Vervang de placeholder-teksten met eigen inhoud.
-     */
     conclusions: {
       high:   'Uitstekend! Je hebt een scherp oog voor historische portretten.',
       medium: 'Goed gedaan! Met wat meer oefening wordt je blik nog scherper.',
@@ -47,25 +15,6 @@
     },
   };
 
-  /* ══════════════════════════════════════════════════════════════
-     ██████  DATA — vul hier jouw portretten in
-     ──────────────────────────────────────────────────────────────
-     Verplichte velden:
-       id              – unieke string
-       title           – naam van het werk
-       artist          – naam van de kunstenaar
-       year            – jaar van vervaardiging (getal)
-       period          – "before" | "golden" | "after"
-       image           – pad naar afbeelding (relatief aan index.html)
-       actualAge       – werkelijke leeftijd afgebeelde persoon (getal)
-       apparentAgeBucket – moet exact overeenkomen met een waarde in
-                          CONFIG.ageBuckets
-       explanation     – korte uitlegtekst (1-3 zinnen)
-       analysis.uiterlijk   – opmerking over gezichtskenmerken / huid
-       analysis.houding     – opmerking over lichaamshouding & expressie
-       analysis.activiteit  – wat doet de persoon?
-       analysis.context     – kleding, attributen, achtergrond, status
-  ══════════════════════════════════════════════════════════════ */
   const DATA = [
   {
     id: 'p1',
@@ -171,23 +120,12 @@
   },
 ];
 
-  /* ══════════════════════════════════════════════════════════════
-     ██████  SPELSTATUS
-  ══════════════════════════════════════════════════════════════ */
-  /** @type {Array}   Volgorde van portretten voor deze ronde */
   let queue = [];
-  /** @type {number}  Index in queue voor de huidige vraag */
   let currentIndex = 0;
-  /** @type {number}  Huidige totaalscore */
   let score = 0;
-  /** @type {number}  Aantal correct geraden leeftijden */
   let correctAge = 0;
-  /** @type {number}  Aantal correct geraden perioden */
   let correctPeriod = 0;
 
-  /* ══════════════════════════════════════════════════════════════
-     ██████  DOM-REFERENTIES
-  ══════════════════════════════════════════════════════════════ */
   const $  = id => document.getElementById(id);
   const screens = {
     intro:    $('screen-intro'),
@@ -196,11 +134,6 @@
     end:      $('screen-end'),
   };
 
-  /* ══════════════════════════════════════════════════════════════
-     ██████  HULPFUNCTIES
-  ══════════════════════════════════════════════════════════════ */
-
-  /** Shuffle-algoritme (Fisher-Yates in-place) */
   function shuffle(arr) {
     for (let i = arr.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -209,7 +142,6 @@
     return arr;
   }
 
-  /** Toon één scherm, verberg de rest */
   function showScreen(name) {
     Object.values(screens).forEach(s => s.classList.remove('active'));
     screens[name].classList.add('active');
@@ -217,36 +149,30 @@
     header.classList.toggle('hidden', name === 'intro');
   }
 
-  /** Update de score in de header */
   function updateHeaderScore() {
     $('header-score').textContent = `Score: ${score}`;
   }
 
-  /** Voortgangsbalk en label */
   function updateProgress() {
     const total = queue.length;
-    const done  = currentIndex;          // 0-gebaseerd, vóór confirmeren
+    const done  = currentIndex;
     const pct   = total ? (done / total) * 100 : 0;
     $('progress-bar').style.width = pct + '%';
     $('progress-label').textContent = `Vraag ${done + 1} / ${total}`;
   }
 
-  /** Periode-label voor weergave */
   function periodLabel(value) {
     const map = { before: 'Vóór de Gouden Eeuw', golden: 'Gouden Eeuw', after: 'Na de Gouden Eeuw' };
     return map[value] || value;
   }
 
-  /** Lees de gekozen radio-waarde in een group (null als niets gekozen) */
   function getRadioValue(name) {
     const el = document.querySelector(`input[name="${name}"]:checked`);
     return el ? el.value : null;
   }
 
-  /** Verwijder alle radio-selecties in een group */
   function clearRadios(name) {
     document.querySelectorAll(`input[name="${name}"]`).forEach(r => (r.checked = false));
-    // Radio-kaartjes geselecteerde stijl opruimen
     document.querySelectorAll(`.radio-card`).forEach(c => {
       if (c.querySelector(`input[name="${name}"]`)) {
         c.classList.remove('selected');
@@ -254,26 +180,18 @@
     });
   }
 
-  /* ══════════════════════════════════════════════════════════════
-     ██████  RENDER-FUNCTIES
-  ══════════════════════════════════════════════════════════════ */
-
-  /** --- INTRO --- */
   function renderIntro() {
-    // Vervang de placeholder {{…}} in de intro-hint
     const hint = document.querySelector('.intro-hint');
     if (hint) hint.textContent = `${DATA.length} portretten · Tijdsduur ±5 minuten`;
     showScreen('intro');
   }
 
-  /** --- VRAAG --- */
   function renderQuestion() {
     const portrait = queue[currentIndex];
 
     updateProgress();
     updateHeaderScore();
 
-    // Afbeelding laden
     const img      = $('painting-img');
     const fallback = $('painting-fallback');
     img.src = portrait.image;
@@ -288,12 +206,8 @@
       fallback.classList.add('hidden');
     };
 
-    // Meta-tekst (optioneel tonen — titel/kunstenaar/jaar zijn
-    // bewust verborgen zodat de speler niet kan spieken)
-    $('painting-meta').textContent = '';  // Verwijder als je meta wilt tonen:
-    // $('painting-meta').textContent = `${portrait.title} — ${portrait.artist} (${portrait.year})`;
+    $('painting-meta').textContent = '';
 
-    // Leeftijdsopties genereren
     const ageGroup = $('age-options');
     ageGroup.innerHTML = '';
     CONFIG.ageBuckets.forEach(bucket => {
@@ -305,7 +219,6 @@
       ageGroup.appendChild(label);
     });
 
-    // Periodevraag tonen/verbergen
     const periodSection = $('period-section');
     if (CONFIG.enablePeriodQuestion) {
       periodSection.style.display = '';
@@ -313,62 +226,52 @@
       periodSection.style.display = 'none';
     }
 
-    // Radiobuttons schoonmaken van vorige ronde
     clearRadios('age');
     clearRadios('period');
 
-    // Bevestig-knop uitschakelen
     $('btn-confirm').disabled = true;
 
-    // Luisteraars voor validatie opnieuw instellen
     ageGroup.addEventListener('change', validateConfirm);
     $('period-options').addEventListener('change', validateConfirm);
 
     showScreen('question');
   }
 
-  /** Activeer de bevestigknop zodra alle verplichte vragen beantwoord zijn */
   function validateConfirm() {
     const ageOk    = getRadioValue('age') !== null;
     const periodOk = !CONFIG.enablePeriodQuestion || getRadioValue('period') !== null;
     $('btn-confirm').disabled = !(ageOk && periodOk);
   }
 
-  /** --- FEEDBACK --- */
   function renderFeedback(chosenAge, chosenPeriod) {
     const portrait = queue[currentIndex];
 
-    // Beoordeling
     const ageCorrect    = chosenAge === portrait.apparentAgeBucket;
     const periodCorrect = CONFIG.enablePeriodQuestion
       ? chosenPeriod === portrait.period
       : null;
 
-    // Scoreberekening
     let delta = 0;
     if (ageCorrect)    { delta += CONFIG.pointsCorrectAge;    correctAge++; }
     else               { delta += CONFIG.pointsWrong; }
     if (periodCorrect) { delta += CONFIG.pointsCorrectPeriod; correctPeriod++; }
     else if (periodCorrect === false) { delta += CONFIG.pointsWrong; }
-    score += Math.max(delta, 0);   // score gaat nooit onder 0
+    score += Math.max(delta, 0);
 
     updateHeaderScore();
 
-    // Afbeelding dupliceren in feedbackscherm
     const fbImg = $('feedback-img');
     fbImg.src = portrait.image;
     fbImg.alt = portrait.title;
     $('feedback-meta').textContent =
       `${portrait.title} — ${portrait.artist} (${portrait.year})`;
 
-    // Verdictlabels leeftijd
     const verdictAge = $('verdict-age');
     verdictAge.className = 'verdict-row ' + (ageCorrect ? 'verdict-correct' : 'verdict-wrong');
     verdictAge.textContent = ageCorrect
       ? 'Leeftijd goed geraden!'
       : 'Leeftijd niet correct';
 
-    // Verdictlabels periode
     const verdictPeriod = $('verdict-period');
     if (CONFIG.enablePeriodQuestion) {
       verdictPeriod.style.display = '';
@@ -380,17 +283,14 @@
       verdictPeriod.style.display = 'none';
     }
 
-    // Leeftijden weergeven
     $('fb-chosen-age').textContent  = chosenAge + ' jaar';
     $('fb-actual-age').textContent  = portrait.actualAge + ' jaar';
     $('fb-apparent-age').textContent = portrait.apparentAgeBucket + ' jaar';
 
-    // Scoredelta badge
     const deltaEl = $('score-delta');
     deltaEl.textContent  = delta > 0 ? `+${delta} punten` : `+0 punten`;
     deltaEl.className    = 'score-delta ' + (delta > 0 ? 'positive' : 'neutral');
 
-    // Uitleg + analyse
     $('fb-explanation').textContent = portrait.explanation;
     $('fb-uiterlijk').textContent   = portrait.analysis.uiterlijk;
     $('fb-houding').textContent     = portrait.analysis.houding;
@@ -400,11 +300,9 @@
     showScreen('feedback');
   }
 
-  /** --- EINDSCHERM --- */
   function renderEnd() {
     $('end-score').textContent = score;
 
-    // Stats
     const statsEl = $('end-stats');
     const total   = queue.length;
     statsEl.innerHTML = `
@@ -414,7 +312,6 @@
         : ''}
     `;
 
-    // Conclusie op basis van percentage
     const maxScore = total * CONFIG.pointsCorrectAge
       + (CONFIG.enablePeriodQuestion ? total * CONFIG.pointsCorrectPeriod : 0);
     const pct = maxScore > 0 ? score / maxScore : 0;
@@ -428,11 +325,6 @@
     showScreen('end');
   }
 
-  /* ══════════════════════════════════════════════════════════════
-     ██████  SPELLOGICA
-  ══════════════════════════════════════════════════════════════ */
-
-  /** Volledig spelreset (ook scores) + naar intro */
   function resetGame() {
     score        = 0;
     correctAge   = 0;
@@ -442,7 +334,6 @@
     updateHeaderScore();
   }
 
-  /** Start nieuw spel */
   function startGame() {
     score         = 0;
     correctAge    = 0;
@@ -453,15 +344,13 @@
     renderQuestion();
   }
 
-  /** Bevestig antwoord → evalueer en ga naar feedback */
   function confirmAnswer() {
     const chosenAge    = getRadioValue('age');
     const chosenPeriod = CONFIG.enablePeriodQuestion ? getRadioValue('period') : null;
-    if (!chosenAge) return;   // extra guard
+    if (!chosenAge) return;
     renderFeedback(chosenAge, chosenPeriod);
   }
 
-  /** Volgende portret of eindscherm */
   function nextQuestion() {
     currentIndex++;
     if (currentIndex >= queue.length) {
@@ -471,30 +360,18 @@
     }
   }
 
-  /* ══════════════════════════════════════════════════════════════
-     ██████  EVENT LISTENERS
-  ══════════════════════════════════════════════════════════════ */
   document.addEventListener('DOMContentLoaded', () => {
 
-    // Start-knop
     $('btn-start').addEventListener('click', startGame);
-
-    // Bevestig-knop (Enter werkt ook via focus omdat het een <button> is)
     $('btn-confirm').addEventListener('click', confirmAnswer);
-
-    // Volgende-knop
     $('btn-next').addEventListener('click', nextQuestion);
-
-    // Opnieuw spelen (zonder confirm)
     $('btn-replay').addEventListener('click', startGame);
 
-    // Terug naar intro
     $('btn-home').addEventListener('click', () => {
       resetGame();
       renderIntro();
     });
 
-    // Reset-knop in header (met confirm)
     $('btn-reset').addEventListener('click', () => {
       if (confirm('Wil je het spel opnieuw beginnen? Je voortgang gaat verloren.')) {
         resetGame();
@@ -502,7 +379,6 @@
       }
     });
 
-    // Keyboard: Enter op radio-labels mag ook valideren
     document.querySelectorAll('.radio-card').forEach(card => {
       card.addEventListener('keydown', e => {
         if (e.key === 'Enter' || e.key === ' ') {
@@ -512,8 +388,7 @@
       });
     });
 
-    // Begin op introscherm
     renderIntro();
   });
 
-})(); // einde IIFE
+})();
